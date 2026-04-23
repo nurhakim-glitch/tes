@@ -293,14 +293,53 @@ footer {
     .form-actions button { width: 100%; }
 }
 
+@page {
+    size: A4;
+    margin: 2cm;
+}
+
 @media print {
-    body { background: white; color: black; }
+    html, body {
+        background: white;
+        color: black;
+        font-size: 11pt;
+        margin: 0;
+        padding: 0;
+    }
     .no-print { display: none !important; }
+    .container {
+        max-width: 100%;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    main { padding: 0; }
     .card {
         box-shadow: none;
         border: none;
         padding: 0;
+        margin: 0;
+        background: white;
+        border-radius: 0;
     }
-    main { padding: 0; }
-    .detail-meta { background: #f9fafb; }
+    #detail-content h2 {
+        font-size: 16pt;
+        margin-bottom: 12px;
+    }
+    .detail-section h3 { font-size: 12pt; }
+    .detail-section { page-break-inside: avoid; margin-bottom: 14px; }
+    .detail-section ol, .detail-section ul { line-height: 1.5; }
+    .detail-meta {
+        background: #f9fafb;
+        padding: 10px;
+        page-break-inside: avoid;
+    }
+    .keputusan-table { page-break-inside: auto; }
+    .keputusan-table tr { page-break-inside: avoid; }
+    .keputusan-table th, .keputusan-table td {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        font-size: 10pt;
+    }
+    a { color: black; text-decoration: none; }
 }
