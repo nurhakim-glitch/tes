@@ -3,74 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Tes Bahasa Arab Online</title>
+    <title>Aplikasi Notulen Rapat</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
+    <header class="no-print">
         <div class="container">
-            <h1>🕌 Tes Bahasa Arab Online</h1>
-            <p>Uji Kemampuan Bahasa Arab Anda</p>
+            <h1>📝 Notulen Rapat</h1>
+            <p>Catat, simpan, dan kelola notulen rapat Anda</p>
         </div>
     </header>
 
     <main class="container">
-        <section id="login-section" class="card">
-            <h2>Masuk ke Tes</h2>
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="nama">Nama Lengkap</label>
-                    <input type="text" id="nama" name="nama" required>
+        <section id="form-section" class="card no-print">
+            <div class="section-header">
+                <h2 id="form-title">Buat Notulen Baru</h2>
+                <button type="button" id="toggle-list-btn" class="btn-secondary">Lihat Daftar</button>
+            </div>
+
+            <form id="minutes-form">
+                <input type="hidden" id="minutes-id">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="judul">Judul Rapat</label>
+                        <input type="text" id="judul" required placeholder="cth. Rapat Koordinasi Bulanan">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
+
+                <div class="form-row two-col">
+                    <div class="form-group">
+                        <label for="tanggal">Tanggal</label>
+                        <input type="date" id="tanggal" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="waktu">Waktu</label>
+                        <input type="time" id="waktu" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="level">Pilih Level Tes</label>
-                    <select id="level" name="level" required>
-                        <option value="">-- Pilih Level --</option>
-                        <option value="pemula">Pemula (Mubtadi')</option>
-                        <option value="menengah">Menengah (Mutawassith)</option>
-                        <option value="lanjutan">Lanjutan (Mutaqaddim)</option>
-                    </select>
+
+                <div class="form-row two-col">
+                    <div class="form-group">
+                        <label for="lokasi">Lokasi / Platform</label>
+                        <input type="text" id="lokasi" required placeholder="cth. Ruang Rapat A / Zoom">
+                    </div>
+                    <div class="form-group">
+                        <label for="pemimpin">Pemimpin Rapat</label>
+                        <input type="text" id="pemimpin" required placeholder="Nama pemimpin rapat">
+                    </div>
                 </div>
-                <button type="submit" class="btn-primary">Mulai Tes</button>
+
+                <div class="form-group">
+                    <label for="peserta">Peserta (pisahkan dengan koma)</label>
+                    <textarea id="peserta" rows="2" required placeholder="cth. Budi, Siti, Andi, Dewi"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Agenda Rapat</label>
+                    <div id="agenda-list"></div>
+                    <button type="button" class="btn-add" onclick="addAgenda()">+ Tambah Agenda</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Pembahasan / Diskusi</label>
+                    <div id="diskusi-list"></div>
+                    <button type="button" class="btn-add" onclick="addDiskusi()">+ Tambah Pembahasan</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Keputusan / Tindak Lanjut</label>
+                    <div id="keputusan-list"></div>
+                    <button type="button" class="btn-add" onclick="addKeputusan()">+ Tambah Keputusan</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="catatan">Catatan Tambahan</label>
+                    <textarea id="catatan" rows="3" placeholder="Catatan lain bila ada..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">💾 Simpan Notulen</button>
+                    <button type="button" id="reset-btn" class="btn-secondary">🔄 Reset</button>
+                </div>
             </form>
         </section>
 
-        <section id="test-section" class="card hidden">
-            <div class="test-header">
-                <h2>Soal Tes Bahasa Arab</h2>
-                <div id="timer" class="timer">⏱️ 30:00</div>
+        <section id="list-section" class="card hidden no-print">
+            <div class="section-header">
+                <h2>Daftar Notulen Tersimpan</h2>
+                <button type="button" id="back-to-form-btn" class="btn-secondary">+ Buat Baru</button>
             </div>
-            <div id="question-container">
-                <p class="question-number">Soal <span id="current-num">1</span> dari <span id="total-num">5</span></p>
-                <h3 id="question-text" lang="ar" dir="rtl"></h3>
-                <div id="options-container"></div>
+            <div class="form-group">
+                <input type="text" id="search" placeholder="🔍 Cari berdasarkan judul, tanggal, atau pemimpin...">
             </div>
-            <div class="test-navigation">
-                <button id="prev-btn" class="btn-secondary">Sebelumnya</button>
-                <button id="next-btn" class="btn-primary">Selanjutnya</button>
-                <button id="submit-btn" class="btn-success hidden">Selesai</button>
-            </div>
+            <div id="minutes-list"></div>
         </section>
 
-        <section id="result-section" class="card hidden">
-            <h2>Hasil Tes</h2>
-            <div class="result-box">
-                <p>Nama: <strong id="result-nama"></strong></p>
-                <p>Level: <strong id="result-level"></strong></p>
-                <p>Skor: <strong id="result-score"></strong></p>
-                <p>Keterangan: <strong id="result-status"></strong></p>
+        <section id="detail-section" class="card hidden">
+            <div class="section-header no-print">
+                <h2>Detail Notulen</h2>
+                <div class="btn-group">
+                    <button type="button" id="print-btn" class="btn-primary">🖨️ Cetak / PDF</button>
+                    <button type="button" id="edit-btn" class="btn-secondary">✏️ Edit</button>
+                    <button type="button" id="close-detail-btn" class="btn-secondary">✖ Tutup</button>
+                </div>
             </div>
-            <button id="restart-btn" class="btn-primary">Ulangi Tes</button>
+            <div id="detail-content"></div>
         </section>
     </main>
 
-    <footer>
+    <footer class="no-print">
         <div class="container">
-            <p>&copy; 2026 Aplikasi Tes Bahasa Arab Online</p>
+            <p>&copy; 2026 Aplikasi Notulen Rapat</p>
         </div>
     </footer>
 
